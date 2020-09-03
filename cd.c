@@ -52,6 +52,7 @@ void cd(char *in, char *shell_dir)
         if(chdir(rel_path) != 0)
         {
             // printf("failed\n");
+            // x
             perror("cd:");
         }
     }
