@@ -50,7 +50,7 @@ int main()
 		else if(comp(input, "cd", 2)==0)
 		{
 			// printf("in-cd\n");
-			cd(input);
+			cd(input, shell_dir);
 		}
 
         else
