@@ -10,7 +10,7 @@ void cd(char *in, char *shell_dir)
     char prev = ' ', curr;
 
     int j = 0;
-    for (int i = 0; i < strlen(in); i++)
+    for (int i = 0; i < strlen(in) - 2; i++)
     {
         curr = in[i + 2];
         if (curr == ' ' && prev == ' ')

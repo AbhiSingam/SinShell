@@ -7,7 +7,7 @@ void echo(char *in)
     char prev = ' ', curr;
 
     int j=0;
-    for(int i=0;i<strlen(in);i++)
+    for(int i=0;i<strlen(in) - 4;i++)
     {
         curr = in[i+4];
         if(curr==' ' && prev==' ')

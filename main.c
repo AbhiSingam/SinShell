@@ -53,6 +53,11 @@ int main()
 			cd(input, shell_dir);
 		}
 
+		else if(comp(input, "ls", 2)==0)
+		{
+			ls(input);
+		}
+
         else
         {
 			// execvp(input);
