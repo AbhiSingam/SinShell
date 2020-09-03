@@ -5,6 +5,7 @@
 #include "prompt.h"
 #include "pwd.h"
 #include "echo.h"
+#include "cd.h"
 // Functions end
 
 int main()
@@ -46,8 +47,15 @@ int main()
 			echo(input);
 		}
 
+		else if(comp(input, "cd", 2)==0)
+		{
+			// printf("in-cd\n");
+			cd(input);
+		}
+
         else
         {
+			// execvp(input);
         	printf("Command: \"%s\" not recognized\n", input);
         }
     }
