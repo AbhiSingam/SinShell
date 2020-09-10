@@ -11,7 +11,7 @@ void echo(char *in)
     for(int i=0;i<strlen(in) - 4;i++)
     {
         curr = in[i+4];
-        if(curr==' ' && prev==' ')
+        if ((curr == ' ' || curr == '\t' || curr == '\r') && (prev == ' ' || prev == '\t' || prev == '\r'))
         {
             continue;
         }

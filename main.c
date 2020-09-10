@@ -106,6 +106,30 @@ int main()
 		// }
 
 		// printf("#out: %s#\n", out);
+
+		char hist_text[4096]={'\0'};
+
+		char prev2 = ' ', curr2;
+
+		int jj = 0;
+		for (int i = 0; i < strlen(input); i++)
+		{
+			curr2 = input[i];
+			if ((curr2 == ' ' || curr2 == '\t' || curr2 == '\r') && (prev2 == ' ' || prev2 == '\t' || prev2 == '\r'))
+			{
+				continue;
+			}
+			else
+			{
+				hist_text[jj] = curr2;
+				jj++;
+				prev2 = curr2;
+			}
+		}
+		hist_text[j] = '\0';
+
+		add_comm(hist_text, shell_dir);
+		
 		for (int i = 0; i <= input_count; i++)
 		{
 			int else_flag = 0;
@@ -117,7 +141,6 @@ int main()
 
 			// printf("now add_com\n");
 
-			add_comm(out[i], shell_dir);
 
 			// printf("done add_comm\n");
 
