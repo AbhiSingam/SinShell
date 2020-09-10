@@ -92,18 +92,47 @@ void history(char *in, char *shell_dir)
 
     close(fd);
 
-    int k=0;
+    char hist_comm[20][4096];
+    
+    for(int i=0;i<20;i++)
+    {
+        for(int j=0;j<4096;j++)
+        {
+            hist_comm[i][j]='\0';
+        }
+    }
+
+    int k=0, p=0;
+    
     for(int j=0;j<size;j++)
     {
-        if(k>(20-val))
-        {
-            printf("%c",info[j]);
-        }
+        hist_comm[k][p]=info[j];
+        p++;
         if(info[j]=='\n')
         {
+            p=0;
             k++;
         }
     }
+
+    if(k<val)
+    {
+        for(int i=0;i<k;i++)
+        {
+            printf("%s",hist_comm[i]);
+        }
+    }
+    else
+    {
+        for(int i=0;i<k;i++)
+        {
+            if(i>=k-val)
+            {
+                printf("%s",hist_comm[i]);
+            }
+        }
+    }
+    
 
     return;
 }
@@ -164,6 +193,7 @@ void add_comm(char *in, char *shell_dir)
         curr->next = hist_head;
         curr->prev = NULL;
         hist_head->prev = curr;
+        curr->after=hist_head->after+1;
 
         for (int i = 0; i < 4096; i++)
         {

@@ -1,1 +1,6 @@
-sjdewd
+history
+history 17
+emacs 1.txt &
+emacs 1.txt &
+emacs 1.txt &
+history

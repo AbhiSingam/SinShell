@@ -35,12 +35,13 @@ int main()
 
 	while (1)
 	{
-		struct q *curr = hist_head;
-		while (curr != NULL)
-		{
-			printf("Name: %s\n", curr->name);
-			curr=curr->next;
-		}
+		// struct q *curr = hist_head;
+		// while (curr != NULL)
+		// {
+		// 	printf("Name: %s, After: %d\n", curr->name, curr->after);
+		// 	// printf("Name: %s\n", curr->name);
+		// 	curr=curr->next;
+		// }
 		// printf("kkkkkk\n");
 		prompt(prompt_dir);
 
@@ -105,9 +106,15 @@ int main()
 		// }
 
 		// printf("#out: %s#\n", out);
-		int else_flag = 0;
 		for (int i = 0; i <= input_count; i++)
 		{
+			int else_flag = 0;
+
+			if (out[i][0] == '\0' || out[i][0] == ' ' || out[i][0] == '\t' || out[i][0] == '\r')
+			{
+				continue;
+			}
+
 			// printf("now add_com\n");
 
 			add_comm(out[i], shell_dir);

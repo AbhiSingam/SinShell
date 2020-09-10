@@ -89,8 +89,7 @@ void if_signal(int signum)
         }
         char *final_name = name_from_pid(wpid);
 
-        fprintf(stderr, "%s with pid %d exit with exit code: %d\n", final_name, wpid, WEXITSTATUS(status));
-        
+        fprintf(stderr, "\n%s with pid %d exit with exit code: %d\n", final_name, wpid, WEXITSTATUS(status));
     }
 }
 
