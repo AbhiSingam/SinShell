@@ -3,7 +3,8 @@
 
 void echo(char *in)
 {
-    char *out = malloc(strlen(in) * sizeof(char));
+    char out[4096];
+
     char prev = ' ', curr;
 
     int j=0;
@@ -21,5 +22,8 @@ void echo(char *in)
             prev=curr;
         }
     }
+    out[j]='\0';
     printf("%s\n", out);
+
+    return;
 }

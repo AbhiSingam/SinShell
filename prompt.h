@@ -2,5 +2,6 @@
 #define __PROMPT_H
 
 void prompt();
+char *pwd2();
 
 #endif

@@ -6,62 +6,280 @@
 #include "pwd.h"
 #include "echo.h"
 #include "cd.h"
+#include "ls.h"
+#include "pinfo.h"
+#include "foreground.h"
+#include "background.h"
+#include "history.h"
 // Functions end
 
 int main()
 {
+	head = malloc(sizeof(struct proc_info));
+	head->next = NULL;
+	head->size = 0;
+
+	hist_head = malloc(sizeof(struct q));
+	hist_head->after = 0;
+	hist_head->next = NULL;
+	hist_head->prev = NULL;
+
 	char *shell_dir = malloc(4096 * sizeof(char));
 	getcwd(shell_dir, 4096);
-    while (1)
-    {
-        prompt(shell_dir);
 
-        char *input;
-	    size_t insize = 4096;
-	    size_t characters;
+	char *prompt_dir = malloc(4096 * sizeof(char));
+	prompt_dir = pwd2(shell_dir);
 
-	    input = (char *)malloc(insize * sizeof(char));
+	init_hist_q(shell_dir);
 
-	    if(input == NULL)
-	    {
-	        perror("Unable to take input");
-	        exit(1);
-	    }
 
-	    characters = getline(&input,&insize,stdin);
-	    int inlen = strlen(input);
-    	input[inlen-1] = '\0';
-    
-        if(strcmp(input, "exit") == 0)
-        {
-        	exit(0);
-        }
-
-        else if(strcmp(input, "pwd") == 0)
-        {
-        	pwd(shell_dir);
-        }
-
-		else if(comp(input, "echo", 4) == 0)
+	while (1)
+	{
+		struct q *curr = hist_head;
+		while (curr != NULL)
 		{
-			echo(input);
+			printf("Name: %s\n", curr->name);
+			curr=curr->next;
+		}
+		// printf("kkkkkk\n");
+		prompt(prompt_dir);
+
+		char *input;
+		size_t insize = 4096;
+		size_t characters;
+
+		input = (char *)malloc(insize * sizeof(char));
+
+		if (input == NULL)
+		{
+			perror("Unable to take input");
+			exit(1);
 		}
 
-		else if(comp(input, "cd", 2)==0)
+		characters = getline(&input, &insize, stdin);
+		int inlen = strlen(input);
+		input[inlen - 1] = '\0';
+
+		char out[1024][4096];
+		int input_count = 0;
+		int j = 0;
+		char prev = ' ';
+		for (int i = 0; i < strlen(input); i++)
 		{
-			// printf("in-cd\n");
-			cd(input, shell_dir);
+			char curr = input[i];
+			if (curr == ';')
+			{
+				if (out[0][0] != ' ')
+				{
+					out[input_count][j] = '\0';
+					if (out[input_count][j - 1] == ' ')
+					{
+						out[input_count][j - 1] = '\0';
+					}
+					j = 0;
+					prev = ' ';
+					input_count++;
+				}
+			}
+			else if ((curr == ' ' || curr == '\t' || curr == '\r') && (prev == ' ' || prev == '\t' || prev == '\r'))
+			{
+				continue;
+			}
+			else
+			{
+				out[input_count][j] = curr;
+				j++;
+				prev = curr;
+			}
 		}
 
-		else if(comp(input, "ls", 2)==0)
+		out[input_count][j] = '\0';
+		if (out[input_count][j - 1] == ' ')
 		{
-			ls(input);
+			out[input_count][j - 1] = '\0';
 		}
 
-        else
-        {
-			// execvp(input);
-        	printf("Command: \"%s\" not recognized\n", input);
-        }
-    }
+		// for(int i=0;i<=input_count;i++)
+		// {
+		// 	printf("input%d: %s###\n",i+1,out[i]);
+		// }
+
+		// printf("#out: %s#\n", out);
+		int else_flag = 0;
+		for (int i = 0; i <= input_count; i++)
+		{
+			// printf("now add_com\n");
+
+			add_comm(out[i], shell_dir);
+
+			// printf("done add_comm\n");
+
+			// printf("out%d: %s###\n", i, out[i]);
+			if (comp(out[i], "exit", 4) == 0)
+			{
+				if (strlen(out[i]) != 4)
+				{
+					if (out[i][4] != ' ')
+					{
+						else_flag = 1;
+					}
+					else
+					{
+						exit(0);
+					}
+				}
+
+				else
+				{
+					exit(0);
+				}
+			}
+
+			else if (comp(out[i], "pwd", 3) == 0)
+			{
+				if (strlen(out[i]) != 3)
+				{
+					if (out[i][3] != ' ')
+					{
+						else_flag = 1;
+					}
+					else
+					{
+						pwd(shell_dir);
+					}
+				}
+
+				else
+				{
+					pwd(shell_dir);
+				}
+			}
+
+			else if (comp(out[i], "echo", 4) == 0)
+			{
+				if (strlen(out[i]) != 4)
+				{
+					if (out[i][4] != ' ')
+					{
+						else_flag = 1;
+					}
+					else
+					{
+						echo(out[i]);
+					}
+				}
+
+				else
+				{
+					echo(out[i]);
+				}
+			}
+
+			else if (comp(out[i], "cd", 2) == 0)
+			{
+				if (strlen(out[i]) != 2)
+				{
+					if (out[i][2] != ' ')
+					{
+						else_flag = 1;
+					}
+					else
+					{
+						cd(out[i], shell_dir);
+						prompt_dir = pwd2(shell_dir);
+					}
+				}
+
+				else
+				{
+					cd(out[i], shell_dir);
+					prompt_dir = pwd2(shell_dir);
+				}
+			}
+
+			else if (comp(out[i], "ls", 2) == 0)
+			{
+				if (strlen(out[i]) != 2)
+				{
+					if (out[i][2] != ' ')
+					{
+						else_flag = 1;
+					}
+					else
+					{
+						ls(out[i], shell_dir);
+					}
+				}
+
+				else
+				{
+					ls(out[i], shell_dir);
+				}
+			}
+
+			else if (comp(out[i], "pinfo", 5) == 0)
+			{
+				if (strlen(out[i]) != 5)
+				{
+					if (out[i][5] != ' ')
+					{
+						else_flag = 1;
+					}
+					else
+					{
+						pinfo(out[i]);
+					}
+				}
+
+				else
+				{
+					pinfo(out[i]);
+				}
+			}
+
+			else if (comp(out[i], "history", 7) == 0)
+			{
+				if (strlen(out[i]) != 7)
+				{
+					if (out[i][7] != ' ')
+					{
+						else_flag = 1;
+					}
+					else
+					{
+						history(out[i], shell_dir);
+					}
+				}
+
+				else
+				{
+					history(out[i], shell_dir);
+				}
+			}
+
+			else
+			{
+				if (out[i][strlen(out[i]) - 1] != '&')
+				{
+					foreground(out[i]);
+				}
+				else
+				{
+					background(out[i]);
+				}
+			}
+
+			if (else_flag)
+			{
+				if (out[i][strlen(out[i]) - 1] != '&')
+				{
+					foreground(out[i]);
+				}
+				else
+				{
+					background(out[i]);
+				}
+			}
+		}
+	}
 }
