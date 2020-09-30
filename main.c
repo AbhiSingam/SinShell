@@ -11,10 +11,16 @@
 #include "foreground.h"
 #include "background.h"
 #include "history.h"
+#include "redirection.h"
+#include "run.h"
+#include "pipe.h"
 // Functions end
 
 int main()
 {
+	stdinCopy = dup(STDIN_FILENO);
+	stdoutCopy = dup(STDOUT_FILENO);
+
 	head = malloc(sizeof(struct proc_info));
 	head->next = NULL;
 	head->size = 0;
@@ -35,14 +41,6 @@ int main()
 
 	while (1)
 	{
-		// struct q *curr = hist_head;
-		// while (curr != NULL)
-		// {
-		// 	printf("Name: %s, After: %d\n", curr->name, curr->after);
-		// 	// printf("Name: %s\n", curr->name);
-		// 	curr=curr->next;
-		// }
-		// printf("kkkkkk\n");
 		prompt(prompt_dir);
 
 		char *input;
@@ -100,13 +98,6 @@ int main()
 			out[input_count][j - 1] = '\0';
 		}
 
-		// for(int i=0;i<=input_count;i++)
-		// {
-		// 	printf("input%d: %s###\n",i+1,out[i]);
-		// }
-
-		// printf("#out: %s#\n", out);
-
 		char hist_text[4096]={'\0'};
 
 		char prev2 = ' ', curr2;
@@ -132,183 +123,26 @@ int main()
 		
 		for (int i = 0; i <= input_count; i++)
 		{
-			int else_flag = 0;
 
 			if (out[i][0] == '\0' || out[i][0] == ' ' || out[i][0] == '\t' || out[i][0] == '\r')
 			{
 				continue;
 			}
 
-			// printf("now add_com\n");
+			prompt_dir = piping(out[i],shell_dir,prompt_dir);
 
-
-			// printf("done add_comm\n");
-
-			// printf("out%d: %s###\n", i, out[i]);
-			if (comp(out[i], "exit", 4) == 0)
+			if (dup2(stdoutCopy, STDOUT_FILENO) < 0)
 			{
-				if (strlen(out[i]) != 4)
-				{
-					if (out[i][4] != ' ')
-					{
-						else_flag = 1;
-					}
-					else
-					{
-						exit(0);
-					}
-				}
-
-				else
-				{
-					exit(0);
-				}
+				write(STDERR_FILENO, "This is a flag\n", strlen("This is a flag\n"));
+				perror("Unable to duplicate file descriptor.");
+				exit(1);
 			}
 
-			else if (comp(out[i], "pwd", 3) == 0)
+			if (dup2(stdinCopy, STDIN_FILENO) < 0)
 			{
-				if (strlen(out[i]) != 3)
-				{
-					if (out[i][3] != ' ')
-					{
-						else_flag = 1;
-					}
-					else
-					{
-						pwd(shell_dir);
-					}
-				}
-
-				else
-				{
-					pwd(shell_dir);
-				}
-			}
-
-			else if (comp(out[i], "echo", 4) == 0)
-			{
-				if (strlen(out[i]) != 4)
-				{
-					if (out[i][4] != ' ')
-					{
-						else_flag = 1;
-					}
-					else
-					{
-						echo(out[i]);
-					}
-				}
-
-				else
-				{
-					echo(out[i]);
-				}
-			}
-
-			else if (comp(out[i], "cd", 2) == 0)
-			{
-				if (strlen(out[i]) != 2)
-				{
-					if (out[i][2] != ' ')
-					{
-						else_flag = 1;
-					}
-					else
-					{
-						cd(out[i], shell_dir);
-						prompt_dir = pwd2(shell_dir);
-					}
-				}
-
-				else
-				{
-					cd(out[i], shell_dir);
-					prompt_dir = pwd2(shell_dir);
-				}
-			}
-
-			else if (comp(out[i], "ls", 2) == 0)
-			{
-				if (strlen(out[i]) != 2)
-				{
-					if (out[i][2] != ' ')
-					{
-						else_flag = 1;
-					}
-					else
-					{
-						ls(out[i], shell_dir);
-					}
-				}
-
-				else
-				{
-					ls(out[i], shell_dir);
-				}
-			}
-
-			else if (comp(out[i], "pinfo", 5) == 0)
-			{
-				if (strlen(out[i]) != 5)
-				{
-					if (out[i][5] != ' ')
-					{
-						else_flag = 1;
-					}
-					else
-					{
-						pinfo(out[i]);
-					}
-				}
-
-				else
-				{
-					pinfo(out[i]);
-				}
-			}
-
-			else if (comp(out[i], "history", 7) == 0)
-			{
-				if (strlen(out[i]) != 7)
-				{
-					if (out[i][7] != ' ')
-					{
-						else_flag = 1;
-					}
-					else
-					{
-						history(out[i], shell_dir);
-					}
-				}
-
-				else
-				{
-					history(out[i], shell_dir);
-				}
-			}
-
-			else
-			{
-				if (out[i][strlen(out[i]) - 1] != '&')
-				{
-					foreground(out[i]);
-				}
-				else
-				{
-					background(out[i]);
-				}
-			}
-
-			if (else_flag)
-			{
-				if (out[i][strlen(out[i]) - 1] != '&')
-				{
-					foreground(out[i]);
-				}
-				else
-				{
-					background(out[i]);
-				}
+				write(STDERR_FILENO, "This is a flag\n", strlen("This is a flag\n"));
+				perror("Unable to duplicate file descriptor.");
+				exit(1);
 			}
 		}
 	}

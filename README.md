@@ -37,9 +37,9 @@ A custom shell I made using C
     * if number of executed commands is less than requested number of commands, the maximum number of recorded commands will be printed
     * the executed commands are stored in "hist_info.txt", and if "hist_info.txt" does not exist then it will be created as a part of the command
     * history is implemented in "history.c" and "history.h"
-- `exit`
-    * "exit" exits the shell
-    * exit is implemented in "main.c" directly
+- `quit`
+    * "quit" quits the shell
+    * quit is implemented in "main.c" directly
 
 ## Foreground and background processes:
 - `foreground`

@@ -217,7 +217,7 @@ void ls(char *in, char *shell_dir)
             {
                 if(out[i]!='a' && out[i]!='l')
                 {
-                    printf("ls: invalid option -- \'%c\'\n",out[i]);
+                    fprintf(stderr, "ls: invalid option -- \'%c\'\n",out[i]);
                     memset(flags, 0, 64);
                     memset(pwd, 0, 4096);
                     memset(out, 0, strlen(in));
@@ -293,12 +293,12 @@ void ls(char *in, char *shell_dir)
             if(stat(the_way,&checker)<0)
             {
                 arg_flag=1;
-                printf("ls: No such file or directory \'%s\'\n", temp);
+                fprintf(stderr, "ls: No such file or directory \'%s\'\n", temp);
             }
             else if (((checker.st_mode & S_IRUSR) ? 0 : 1)==1)
             {
                 arg_flag=1;
-                printf("ls: cannot open directory \'%s\': Permission denied\n", temp);
+                fprintf(stderr, "ls: cannot open directory \'%s\': Permission denied\n", temp);
             }
             else
             {

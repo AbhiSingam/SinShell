@@ -53,7 +53,7 @@ void prompt(char *pwd) {
     // char *pwd = pwd2(shell_dir);
     if(unameRet!=0)
     {
-    	printf("Failed to read system and user names");
+    	fprintf(stderr, "Failed to read system and user names");
     	exit(1);
     }
 

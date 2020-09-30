@@ -22,3 +22,6 @@ struct proc_info
 };
 
 struct proc_info *head;
+
+int stdoutCopy;
+int stdinCopy;

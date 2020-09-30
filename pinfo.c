@@ -54,7 +54,7 @@ void pinfo(char *in)
     FILE *fd_exe = fopen(exe_path, "r");
     if(!fd_stat||!fd_exe)
     {
-        printf("pinfo: Invalid pid\n");
+        fprintf(stderr,"pinfo: Invalid pid\n");
         return;
     }
 

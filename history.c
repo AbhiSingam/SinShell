@@ -80,7 +80,7 @@ void history(char *in, char *shell_dir)
     
     if(val>20)
     {
-        printf("history: invalid arguments: number of requested commands cannot exceed 20\n");
+        fprintf(stderr ,"history: invalid arguments: number of requested commands cannot exceed 20\n");
         return;
     }
     // printf("VAL: %d###\n", val);
