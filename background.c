@@ -1,7 +1,7 @@
 #include "headers.h"
 #include "background.h"
 
-void add_to_list(int pid, char *name)
+void add_to_list(int pid, char *name, char *arguments[1024], int arg_count)
 {
     if(head->size==0)
     {
@@ -16,8 +16,26 @@ void add_to_list(int pid, char *name)
             head->name[i]=name[i];
             i++;
         }
+
+        int k=0;
+
+        while(arguments[k][0]!='\0')
+        {
+            for(int l=0;l<=strlen(arguments[k]);l++)
+            {
+                head->args[k][l]=arguments[k][l];
+            }
+            k++;
+            if(k>=arg_count-1)
+            {
+                break;
+            }
+        }
+
+        head->arg_count=k;
         head->name[i]='\0';
         head->size++;
+        head->ded=0;
     }
     else
     {
@@ -38,6 +56,23 @@ void add_to_list(int pid, char *name)
         curr->size=head->size+1;
         head->size=0;
         head=curr;
+        head->ded=0;
+
+        int k=0;
+        while (arguments[k][0] != '\0')
+        {
+            for (int l = 0; l <= strlen(arguments[k]); l++)
+            {
+                head->args[k][l] = arguments[k][l];
+            }
+            k++;
+            if (k >= arg_count-1)
+            {
+                break;
+            }
+        }
+
+        head->arg_count=k;
     }
     
 
@@ -63,6 +98,7 @@ char * name_from_pid(int pid)
                 i++;
             }
             buf[i]='\0';
+            curr->ded=1;                            // Makes process ded
             break;
         }
         curr=curr->next;
@@ -97,6 +133,7 @@ void background(char *in)
 {
     char command[4096] = "";
     char *arguments[1024];
+
     int switch_flag = 0, arg_count = 0;
 
     for (int e = 0; e < strlen(in); e++)
@@ -176,7 +213,9 @@ void background(char *in)
     else
     {
         setpgid(pid,0);
-        add_to_list(pid,command);
+        // printf("before\n");
+        add_to_list(pid,command,arguments,arg_count);
+        // printf("after\n");
         signal(SIGCHLD,if_signal);
 
         return;

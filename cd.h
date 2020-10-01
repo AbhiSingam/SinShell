@@ -3,4 +3,6 @@
 
 void cd();
 
+char previous[4096];
+
 #endif

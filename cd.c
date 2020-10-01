@@ -59,6 +59,22 @@ void cd(char *in, char *shell_dir)
         }
     }
 
+    else if(out[0]=='-')
+    {
+        if(previous[0]=='\0')
+        {
+            fprintf(stderr, "cd: previous working directory undefined\n");
+        }
+        else
+        {
+            if (chdir(previous) != 0)
+            {
+                perror("cd");
+            }
+        }
+        
+    }
+
     else if(strlen(in)==2)
     {
         if (chdir(shell_dir) != 0)
@@ -108,6 +124,15 @@ void cd(char *in, char *shell_dir)
             // printf("failed\n");
             perror("cd");
         }
+    }
+
+    for(int i=0;i<4096;i++)
+    {
+        previous[i]='\0';
+    }
+    for(int i=0;i<strlen(pwd);i++)
+    {
+        previous[i]=pwd[i];
     }
     
     memset(pwd,0,4096);

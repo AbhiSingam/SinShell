@@ -14,10 +14,23 @@
 #include "redirection.h"
 #include "run.h"
 #include "pipe.h"
+#include "env.h"
+#include "jobs.h"
+#include "kjob.h"
+#include "overkill.h"
+#include "bg.h"
+#include "fg.h"
+#include "ctrlz.h"
 // Functions end
 
 int main()
 {
+	signal(SIGINT, ctrlc);
+
+	signal(SIGTSTP, ctrlz);
+
+	pid_fore=-1;
+
 	stdinCopy = dup(STDIN_FILENO);
 	stdoutCopy = dup(STDOUT_FILENO);
 
@@ -56,6 +69,15 @@ int main()
 		}
 
 		characters = getline(&input, &insize, stdin);
+
+		// printf("chars: %lu\n",characters);
+
+		if (characters == (unsigned long)-1)
+		{
+			fprintf(stderr, "\n");
+			exit(1);
+		}
+
 		int inlen = strlen(input);
 		input[inlen - 1] = '\0';
 

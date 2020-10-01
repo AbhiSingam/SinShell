@@ -1,5 +1,6 @@
 #include "headers.h"
 #include "foreground.h"
+#include "background.h"
 
 void foreground(char *in)
 {
@@ -78,6 +79,7 @@ void foreground(char *in)
     }
     else if(pid==0)
     {
+        setpgid(0,0);
         if(execvp(command, arguments)<0)
         {
             perror("execvp");
@@ -89,10 +91,37 @@ void foreground(char *in)
     }
     else
     {
+
+        pid_fore=pid;
+        int par_pid = getpgrp();
         int status;
-        waitpid(pid,&status,0);
+
+        signal(SIGTTIN, SIG_IGN);
+        signal(SIGTTOU, SIG_IGN);
+
+        tcsetpgrp(STDIN_FILENO, pid);
+
+        waitpid(pid,&status,WUNTRACED);
+
+        tcsetpgrp(STDIN_FILENO, par_pid);
+        signal(SIGTTIN, SIG_DFL);
+        signal(SIGTTOU, SIG_DFL);
+
+        if(WIFSTOPPED(status))
+        {
+            add_to_list(pid, command, arguments, arg_count);
+        }
+
+        pid_fore=-1;
+
         return;
         //wait for execvp (child process)
     }
     
 }
+
+
+// SIGTSTP -> CTRL+Z
+// Store pid of foreground command
+// if shell is running, do nothing
+// else add process to background

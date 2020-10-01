@@ -3,4 +3,8 @@
 
 void background();
 
+void add_to_list();
+
+void if_signal();
+
 #endif

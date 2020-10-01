@@ -18,10 +18,14 @@ struct proc_info
     struct proc_info *next;
     pid_t pid;
     char name[4096];
+    char args[1024][4096];
     int size;
+    int ded;
+    int arg_count;
 };
 
 struct proc_info *head;
 
 int stdoutCopy;
 int stdinCopy;
+int pid_fore;

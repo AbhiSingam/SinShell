@@ -12,6 +12,12 @@
 #include "background.h"
 #include "history.h"
 #include "redirection.h"
+#include "env.h"
+#include "jobs.h"
+#include "kjob.h"
+#include "overkill.h"
+#include "bg.h"
+#include "fg.h"
 // Functions end
 
 char * run(char *curr_com, char *shell_dir, char *prompt_dir)
@@ -157,6 +163,146 @@ char * run(char *curr_com, char *shell_dir, char *prompt_dir)
         else
         {
             history(curr_com, shell_dir);
+        }
+    }
+
+    else if (comp(curr_com, "setenv", 6) == 0)
+    {
+        if (strlen(curr_com) != 6)
+        {
+            if (curr_com[6] != ' ')
+            {
+                else_flag = 1;
+            }
+            else
+            {
+                mysetenv(curr_com);
+            }
+        }
+
+        else
+        {
+            mysetenv(curr_com);
+        }
+    }
+
+    else if (comp(curr_com, "unsetenv", 8) == 0)
+    {
+        if (strlen(curr_com) != 8)
+        {
+            if (curr_com[8] != ' ')
+            {
+                else_flag = 1;
+            }
+            else
+            {
+                myunsetenv(curr_com);
+            }
+        }
+
+        else
+        {
+            myunsetenv(curr_com);
+        }
+    }
+
+    else if (comp(curr_com, "jobs", 4) == 0)
+    {
+        if (strlen(curr_com) != 4)
+        {
+            if (curr_com[4] != ' ')
+            {
+                else_flag = 1;
+            }
+            else
+            {
+                jobs();
+            }
+        }
+
+        else
+        {
+            jobs();
+        }
+    }
+
+    else if (comp(curr_com, "kjob", 4) == 0)
+    {
+        if (strlen(curr_com) != 4)
+        {
+            if (curr_com[4] != ' ')
+            {
+                else_flag = 1;
+            }
+            else
+            {
+                kjob(curr_com);
+            }
+        }
+
+        else
+        {
+            kjob(curr_com);
+        }
+    }
+
+    else if (comp(curr_com, "overkill", 8) == 0)
+    {
+        if (strlen(curr_com) != 8)
+        {
+            if (curr_com[8] != ' ')
+            {
+                else_flag = 1;
+            }
+            else
+            {
+                overkill();
+            }
+        }
+
+        else
+        {
+            overkill();
+        }
+    }
+
+    else if (comp(curr_com, "bg", 2) == 0)
+    {
+        if (strlen(curr_com) != 2)
+        {
+            if (curr_com[2] != ' ')
+            {
+                else_flag = 1;
+            }
+            else
+            {
+                bg(curr_com);
+            }
+        }
+
+        else
+        {
+            bg(curr_com);
+        }
+    }
+
+    else if (comp(curr_com, "fg", 2) == 0)
+    {
+        if (strlen(curr_com) != 2)
+        {
+            if (curr_com[2] != ' ')
+            {
+                else_flag = 1;
+            }
+            else
+            {
+                fg(curr_com);
+            }
+        }
+
+        else
+        {
+            fg(curr_com);
         }
     }
 
