@@ -70,7 +70,9 @@ void cd(char *in, char *shell_dir)
             if (chdir(previous) != 0)
             {
                 perror("cd");
+                return;
             }
+            printf("%s\n", previous);
         }
         
     }

@@ -52,7 +52,7 @@ void kjob(char * in)
     {
         if (((int)val[1][i] > (int)'9' || (int)val[1][i] < (int)'0'))
         {
-            fprintf(stderr, "kjob: invalid arguments: arguments must be integers: #%s#%d\n", val[1], i);
+            fprintf(stderr, "kjob: invalid arguments: arguments must be integers\n");
             return;
         }
     }
@@ -60,7 +60,7 @@ void kjob(char * in)
     {
         if (((int)val[2][i] > (int)'9' || (int)val[2][i] < (int)'0'))
         {
-            fprintf(stderr, "kjob: invalid arguments: arguments must be integers: #%s#%d\n", val[2], i);
+            fprintf(stderr, "kjob: invalid arguments: arguments must be integers\n");
             return;
         }
     }
