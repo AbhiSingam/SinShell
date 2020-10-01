@@ -43,6 +43,11 @@ int main()
 	hist_head->next = NULL;
 	hist_head->prev = NULL;
 
+	for(int i=0;i<4096;i++)
+	{
+		previous[i]='\0';
+	}
+
 	char *shell_dir = malloc(4096 * sizeof(char));
 	getcwd(shell_dir, 4096);
 

@@ -37,8 +37,30 @@ A custom shell I made using C
     * if number of executed commands is less than requested number of commands, the maximum number of recorded commands will be printed
     * the executed commands are stored in "hist_info.txt", and if "hist_info.txt" does not exist then it will be created as a part of the command
     * history is implemented in "history.c" and "history.h"
+- `setenv var [value]`
+    * "setenv var [value]" can be used to create/modify environment variables.
+    * If there is no environment variable of the name var, then a new environment variable is created and is gien the value [value].
+    * If there already exists an envorinment variable with the name var, then the value of that environment variable is updated so that it will be [value].
+    * setenv is implemented in "env.c" and "env.h".
+- `unsetenv var`
+    * "unsetenv var" can be used to remove the environment variable with name var.
+    * unsetenv is implemented in 'env.c" and "env.h".
+- `jobs`
+    * "jobs" prints information regarding all running and/or stopped background processes.
+    * "jobs" prints the job number, execution status, executed command, and pid of each running or stopped background process.
+    * jobs is implemented in "jobs.c" and "jobs.h".
+- `kjob <job number> <signal number>`
+    * "kjob <job number> <signal number>" sends a signal defined by <signal number> to the job defined by <job number>.
+    * kjob can be used to kill specific background processes or influence their execution status.
+    * kjob is implemented in "kjob.c" and "kjob.h". 
+- `fg`
+- `bg`
+- `overkill`
+    * "overkill" kills all present background processes.
+    * overkill is executed in "overkill.c" and "overkill.h".
 - `quit`
     * "quit" quits the shell
+    * "Ctrl+D" will also quit the shell
     * quit is implemented in "main.c" directly
 
 ## Foreground and background processes:
@@ -55,8 +77,24 @@ A custom shell I made using C
     * prompt is run at the start of the shell loop and displays the username, system name and current directory.
     * prompt is implemented in "prompt.c" and "prompt.h"
 
+## Signal Handling:
+- `Ctrl+C`
+    * Ctrl+C will interrupt any running foreground process with the SIGINT signal.
+    * Ctrl+C will NOT interrupt the shell itself and will not exit the shell.
+- `Ctrl+Z`
+    * Ctrl+Z will push any running foreground process to the background and will change it's state from running to stopped.
+
 ## Other things to note:
 - `';' separated commands`
     * SinShell is equipped to execute multiple ';' separated commands
 - `Handling extra white space`
     * SinShell is equipped to handle extra spaces(' ') and tabs('\t') in commands
+- `I/O Redirection`
+    * SinShell supports I/O redirection using '>', '>>' and '<'.
+    * '>' overwrites the output file and creates the output file (with permissions 644) if it doesn't exist.
+    * '>>' appends to the output file and creates the output file (with permissions 644) if it doesn't exist.
+    * '<' redirects a given input file as the input (STDIN) of a certain command.
+- `Piping`
+    * SinShell suppports piping between commands using the '|' character.
+    * if two commands are run with a pipe in between them (i.e. "<command 1> | <command 2>"), then the STDOUT of command 1 is piped/redirected to the STDIN of command 2.
+    * SinShell also supports the use of both piping and redirection simultaneously. For any command, I/O redirection has a higher priority than redirection using piping.
